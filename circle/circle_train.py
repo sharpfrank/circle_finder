@@ -1,16 +1,15 @@
 import torch
-import torch.optim as optim
-from torch.optim import lr_scheduler
 import time
 import copy
 from collections import defaultdict
 
-def calc_loss(pred, target, metrics):
-    mloss = torch.nn.MSELoss()
-    mse = mloss(pred, target)    
-    metrics['mse'] += mse.data.cpu().numpy() * target.size(0)
-    metrics['loss'] = metrics['mse']
+
+def calc_loss(predict, target, metrics):
+    model_loss = torch.nn.MSELoss()
+    mse = model_loss(predict, target)
+    metrics['loss'] += mse.data.cpu().numpy() * target.size(0)
     return mse
+
 
 def print_metrics(metrics, epoch_samples, phase):    
     outputs = []
@@ -19,7 +18,8 @@ def print_metrics(metrics, epoch_samples, phase):
         
     print("{}: {}".format(phase, ", ".join(outputs)))    
 
-def train_model(model, dataloaders, optimizer, scheduler, num_epochs=25, device='cpu'):
+
+def train_model(model, data_loaders, optimizer, scheduler, num_epochs=25, device='cpu'):
     best_model_wts = copy.deepcopy(model.state_dict())
     best_loss = 1e10
 
@@ -39,7 +39,7 @@ def train_model(model, dataloaders, optimizer, scheduler, num_epochs=25, device=
             metrics = defaultdict(float)
             epoch_samples = 0
             
-            for inputs, labels in dataloaders[phase]:
+            for inputs, labels in data_loaders[phase]:
                 inputs = inputs.to(device)
                 labels = labels.to(device)             
 
