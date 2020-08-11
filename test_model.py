@@ -17,6 +17,7 @@ def main(cm_args):
 	model_type = cm_args.model_type
 	test_size = cm_args.test_size
 	print(f'test size: {test_size}')
+	print(f'model name: {circle_parm_model_name}   type: {model_type}')
 
 	# Load the model and setup on device
 	device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
