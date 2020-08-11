@@ -1,0 +1,4 @@
+test size: 100000
+loading model models/circlenet18-d200k40k.pk complete
+AP@70: 0.99793
+mean IOU: 0.9679205094950588
