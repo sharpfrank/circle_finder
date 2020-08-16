@@ -25,7 +25,7 @@ class CircleParmDataset(Dataset):
         return len(self.images)
 
     def __getitem__(self, idx) -> (np.array, np.array):
-        """ Return and image and its parameters using idx as an index 0..count."""
+        """ Return an image and its parameters using idx as an index 0..count."""
         r_image = np.expand_dims(self.images[idx], axis=0)
         parameters = np.array(self.circle_parameters[idx], dtype=np.float32)
         return [r_image, parameters]

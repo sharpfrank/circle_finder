@@ -2,6 +2,10 @@ import numpy as np
 from shapely.geometry.point import Point
 from skimage.draw import circle_perimeter_aa
 
+"""
+A supplied set of functions to generate images and measure image overlap.
+"""
+
 
 def draw_circle(img, row, col, rad):
     rr, cc, val = circle_perimeter_aa(row, col, rad)
