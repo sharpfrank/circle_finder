@@ -63,7 +63,7 @@ def main(cm_args):
 
     print(f'Begin training model {model_name}')
     model = train_model(model, data_loaders, optimizer_ft, exp_lr_scheduler,
-                        num_epochs=num_epochs, device=device)
+                        device=device, num_epochs=num_epochs)
 
     print(f'Training complete. Saving model {model_name}')
     torch.save(model.state_dict(), model_name)
