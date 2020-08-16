@@ -26,6 +26,10 @@ Find the location and radius of a circle in a noisy image.
 
 Trained models are stored here. 
 
+```circlenet18-d200k40k.pk``` is the required model file. It was trained with ```train_model.py``` and is tested with ```test_model.py```.
+
 ### results
 
 The log files for training and the testing log files are stored here.
+
+```circlenet18-d200k40k_output.txt``` is the required output training log file.
