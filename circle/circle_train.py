@@ -2,16 +2,20 @@ import torch
 import time
 import copy
 from collections import defaultdict
+from .circlenet import CircleNet
+from .circle_dataset import CircleParmDataset
+from torch.optim import lr_scheduler
+import numpy as np
 
 
-def calc_loss(predict, target, metrics):
+def calc_loss(predict: np.array, target: np.array, metrics: {}) -> torch.tensor:
     model_loss = torch.nn.MSELoss()
     mse = model_loss(predict, target)
     metrics['loss'] += mse.data.cpu().numpy() * target.size(0)
     return mse
 
 
-def print_metrics(metrics, epoch_samples, phase):    
+def print_metrics(metrics: {}, epoch_samples: int, phase: str):
     outputs = []
     for k in metrics.keys():
         outputs.append("{}: {:4f}".format(k, metrics[k] / epoch_samples))
@@ -19,7 +23,19 @@ def print_metrics(metrics, epoch_samples, phase):
     print("{}: {}".format(phase, ", ".join(outputs)))    
 
 
-def train_model(model, data_loaders, optimizer, scheduler, num_epochs=25, device='cpu'):
+def train_model(model: CircleNet, data_loaders: {CircleParmDataset, CircleParmDataset},
+                optimizer: torch.optim, scheduler: lr_scheduler,
+                device: torch.device, num_epochs: int = 25) -> CircleNet:
+    """ Train a model to find a circle in a noisy image
+    parameters:
+    data_loader - a source for images, contains both training and validation images.
+    optimizer - a pytorch based optimizer for use in training the model
+    scheduler - a learning rate scheduler.
+    device = model will use this device, cpu or gpu.
+    num_epochs - the number of epochs to train for.
+    returns: Return the best model as determined by validation loss.
+      Also, print a log of training and validation losses.
+    """
     best_model_wts = copy.deepcopy(model.state_dict())
     best_loss = 1e10
 
@@ -75,7 +91,7 @@ def train_model(model, data_loaders, optimizer, scheduler, num_epochs=25, device
                 best_model_wts = copy.deepcopy(model.state_dict())
 
         time_elapsed = time.time() - since
-        print('{:.0f}m {:.0f}s'.format(time_elapsed // 60, time_elapsed % 60))
+        print('compute time: {:.0f}m {:.0f}s'.format(time_elapsed // 60, time_elapsed % 60))
     print('Best val loss: {:4f}'.format(best_loss))
 
     # load best model weights
